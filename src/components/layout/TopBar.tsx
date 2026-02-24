@@ -1,16 +1,15 @@
 import { motion } from "framer-motion";
-import { FilmReel, Export, CaretRight, Play } from "@phosphor-icons/react";
-import type { WorkflowStep } from "../../types";
-import { WORKFLOW_STEPS } from "../../data/mockData";
+import { FilmReel, Export } from "@phosphor-icons/react";
+import type { WorkspaceTab } from "../../types";
+import { WORKSPACE_TABS } from "../../data/mockData";
 import { GlowButton } from "../shared/GlowButton";
 
 interface TopBarProps {
-  currentStep: WorkflowStep;
-  currentStepIndex: number;
-  onStepChange: (step: WorkflowStep) => void;
+  currentTab: WorkspaceTab;
+  onTabChange: (tab: WorkspaceTab) => void;
 }
 
-export function TopBar({ currentStep, currentStepIndex, onStepChange }: TopBarProps) {
+export function TopBar({ currentTab, onTabChange }: TopBarProps) {
   return (
     <header className="h-14 bg-panel border-b border-edge flex items-center px-4 gap-4 flex-shrink-0">
       <div className="flex items-center gap-2.5 mr-4">
@@ -30,47 +29,30 @@ export function TopBar({ currentStep, currentStepIndex, onStepChange }: TopBarPr
       <div className="w-px h-7 bg-edge" />
 
       <nav className="flex items-center gap-1 flex-1 justify-center">
-        {WORKFLOW_STEPS.map((step, i) => {
-          const isActive = step.id === currentStep;
-          const isPast = i < currentStepIndex;
+        {WORKSPACE_TABS.map((tab) => {
+          const isActive = tab.id === currentTab;
           return (
-            <div key={step.id} className="flex items-center">
-              <motion.button
-                onClick={() => onStepChange(step.id)}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
-                className={`relative flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? "bg-gold/15 text-gold border border-gold/30"
-                    : isPast
-                      ? "text-txt-2 hover:text-txt hover:bg-raised"
-                      : "text-txt-3 hover:text-txt-2 hover:bg-raised"
-                }`}
-              >
-                <span
-                  className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono border ${
-                    isActive
-                      ? "bg-gold/20 border-gold/50 text-gold"
-                      : isPast
-                        ? "bg-raised border-edge-2 text-txt-2"
-                        : "bg-inset border-edge text-txt-3"
-                  }`}
-                >
-                  {isPast ? <Play size={8} weight="fill" /> : i + 1}
-                </span>
-                <span className="hidden lg:inline">{step.shortLabel}</span>
-                {isActive && (
-                  <motion.div
-                    layoutId="step-active"
-                    className="absolute inset-0 rounded-md border border-gold/30"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-              </motion.button>
-              {i < WORKFLOW_STEPS.length - 1 && (
-                <CaretRight size={12} className="mx-0.5 text-txt-3/50" />
+            <motion.button
+              key={tab.id}
+              onClick={() => onTabChange(tab.id)}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className={`relative flex items-center gap-2 px-4 py-1.5 rounded-md text-xs font-medium transition-all duration-200 cursor-pointer ${
+                isActive
+                  ? "bg-gold/15 text-gold border border-gold/30"
+                  : "text-txt-3 hover:text-txt-2 hover:bg-raised border border-transparent"
+              }`}
+            >
+              <span className="hidden lg:inline">{tab.shortLabel}</span>
+              <span className="lg:hidden">{tab.shortLabel}</span>
+              {isActive && (
+                <motion.div
+                  layoutId="tab-active"
+                  className="absolute inset-0 rounded-md border border-gold/30"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                />
               )}
-            </div>
+            </motion.button>
           );
         })}
       </nav>
